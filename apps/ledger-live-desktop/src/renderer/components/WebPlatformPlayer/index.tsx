@@ -25,18 +25,18 @@ import TopBar from "./TopBar";
 import * as tracking from "./tracking";
 import { TopBarConfig } from "./type";
 import {
-  listAccountsCallback,
-  listCurrenciesCallback,
-  receiveOnAccountCallback,
-  requestAccountCallback,
-  signTransactionCallback,
-  broadcastTransactionCallback,
-  startExchangeCallback,
+  listAccountsLogic,
+  listCurrenciesLogic,
+  receiveOnAccountLogic,
+  requestAccountLogic,
+  signTransactionLogic,
+  broadcastTransactionLogic,
+  startExchangeLogic,
   CompleteExchangeRequest,
-  completeExchangeCallback,
+  completeExchangeLogic,
   RequestAccountParams,
-  signMessageCallback,
-} from "./LiveAppSDKCallback";
+  signMessageLogic,
+} from "./LiveAppSDKLogic";
 
 const Container = styled.div`
   display: flex;
@@ -114,23 +114,23 @@ const WebPlatformPlayer = ({ manifest, onClose, inputs, config }: Props) => {
   }, [manifest.url, theme, inputs, manifest.params]);
 
   const listAccounts = useCallback(() => {
-    return listAccountsCallback(accounts);
+    return listAccountsLogic(accounts);
   }, [accounts]);
 
   const listCurrencies = useCallback(() => {
-    return listCurrenciesCallback(currencies);
+    return listCurrenciesLogic(currencies);
   }, [currencies]);
 
   const requestAccount = useCallback(
     (request: RequestAccountParams) => {
-      return requestAccountCallback({ manifest, dispatch }, request);
+      return requestAccountLogic({ manifest, dispatch }, request);
     },
     [manifest, dispatch],
   );
 
   const receiveOnAccount = useCallback(
     ({ accountId }: { accountId: string }) => {
-      return receiveOnAccountCallback({ manifest, dispatch, accounts }, accountId);
+      return receiveOnAccountLogic({ manifest, dispatch, accounts }, accountId);
     },
     [manifest, accounts, dispatch],
   );
@@ -145,12 +145,7 @@ const WebPlatformPlayer = ({ manifest, onClose, inputs, config }: Props) => {
       transaction: RawPlatformTransaction;
       params: any;
     }) => {
-      return signTransactionCallback(
-        { manifest, dispatch, accounts },
-        accountId,
-        transaction,
-        params,
-      );
+      return signTransactionLogic({ manifest, dispatch, accounts }, accountId, transaction, params);
     },
     [manifest, dispatch, accounts],
   );
@@ -163,7 +158,7 @@ const WebPlatformPlayer = ({ manifest, onClose, inputs, config }: Props) => {
       accountId: string;
       signedTransaction: RawPlatformSignedTransaction;
     }) => {
-      return broadcastTransactionCallback(
+      return broadcastTransactionLogic(
         { manifest, dispatch, accounts },
         accountId,
         signedTransaction,
@@ -176,21 +171,21 @@ const WebPlatformPlayer = ({ manifest, onClose, inputs, config }: Props) => {
 
   const startExchange = useCallback(
     ({ exchangeType }: { exchangeType: number }) => {
-      return startExchangeCallback({ manifest, dispatch }, exchangeType);
+      return startExchangeLogic({ manifest, dispatch }, exchangeType);
     },
     [manifest, dispatch],
   );
 
   const completeExchange = useCallback(
     (completeRequest: CompleteExchangeRequest) => {
-      return completeExchangeCallback({ manifest, dispatch, accounts }, completeRequest);
+      return completeExchangeLogic({ manifest, dispatch, accounts }, completeRequest);
     },
     [accounts, dispatch, manifest],
   );
 
   const signMessage = useCallback(
     ({ accountId, message }: { accountId: string; message: string }) => {
-      return signMessageCallback({ manifest, dispatch, accounts }, accountId, message);
+      return signMessageLogic({ manifest, dispatch, accounts }, accountId, message);
     },
     [accounts, dispatch],
   );

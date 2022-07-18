@@ -3,6 +3,7 @@ import { TFunction } from "react-i18next";
 
 import {
   Account,
+  AccountLike,
   CryptoCurrency,
   Operation,
   SignedOperation,
@@ -42,13 +43,13 @@ type WebPlatformContext = {
   accounts: Array<Account>;
 };
 
-export const listAccountsCallback = (accounts: Array<Account>) =>
+export const listAccountsLogic = (accounts: Array<Account>) =>
   accounts.map(account => serializePlatformAccount(accountToPlatformAccount(account)));
 
-export const listCurrenciesCallback = (currencies: Array<CryptoCurrency>) =>
+export const listCurrenciesLogic = (currencies: Array<CryptoCurrency>) =>
   currencies.map(currencyToPlatformCurrency);
 
-export const receiveOnAccountCallback = (
+export const receiveOnAccountLogic = (
   { manifest, dispatch, accounts }: WebPlatformContext,
   accountId: string,
 ) => {
@@ -80,7 +81,7 @@ export type RequestAccountParams = {
   currencies?: string[];
   allowAddAccount?: boolean;
 };
-export const requestAccountCallback = (
+export const requestAccountLogic = (
   { manifest, dispatch }: Omit<WebPlatformContext, "accounts">,
   { currencies, allowAddAccount }: RequestAccountParams,
 ) => {
@@ -90,7 +91,7 @@ export const requestAccountCallback = (
       openModal("MODAL_REQUEST_ACCOUNT", {
         currencies,
         allowAddAccount,
-        onResult: (account: Account) => {
+        onResult: (account?: AccountLike) => {
           tracking.platformRequestAccountSuccess(manifest);
           /**
            * If account does not exist, it means one (or multiple) account(s) have been created
@@ -101,7 +102,11 @@ export const requestAccountCallback = (
            * FIXME: this overall handling of created accounts could be improved and might not handle "onCancel"
            */
           //
-          resolve(account ? serializePlatformAccount(accountToPlatformAccount(account)) : {});
+          if (account === undefined) {
+            resolve({});
+          } else {
+            resolve(serializePlatformAccount(accountToPlatformAccount(account)));
+          }
         },
         onCancel: (error: Error) => {
           tracking.platformRequestAccountFail(manifest);
@@ -112,7 +117,7 @@ export const requestAccountCallback = (
   );
 };
 
-export const signTransactionCallback = (
+export const signTransactionLogic = (
   { manifest, dispatch, accounts }: WebPlatformContext,
   accountId: string,
   transaction: RawPlatformTransaction,
@@ -156,7 +161,7 @@ export const signTransactionCallback = (
   );
 };
 
-export const broadcastTransactionCallback = async (
+export const broadcastTransactionLogic = async (
   { manifest, dispatch, accounts }: WebPlatformContext,
   accountId: string,
   signedTransaction: RawPlatformSignedTransaction,
@@ -212,7 +217,7 @@ export const broadcastTransactionCallback = async (
   return optimisticOperation.hash;
 };
 
-export const startExchangeCallback = (
+export const startExchangeLogic = (
   { manifest, dispatch }: Omit<WebPlatformContext, "accounts">,
   exchangeType: number,
 ) => {
@@ -239,13 +244,13 @@ export type CompleteExchangeRequest = {
   provider: string;
   fromAccountId: string;
   toAccountId: string;
-  transaction: Transaction;
+  transaction: RawPlatformTransaction;
   binaryPayload: string;
   signature: string;
   feesStrategy: string;
   exchangeType: number;
 };
-export const completeExchangeCallback = (
+export const completeExchangeLogic = (
   { manifest, dispatch, accounts }: WebPlatformContext,
   {
     provider,
@@ -323,14 +328,14 @@ export const completeExchangeCallback = (
   );
 };
 
-export const signMessageCallback = (
+export const signMessageLogic = (
   { dispatch, accounts }: WebPlatformContext,
   accountId: string,
   message: string,
 ) => {
   const account = accounts.find(account => account.id === accountId);
   if (account === undefined) {
-    return Promise.reject(new Error("Unknown accountId: " + accountId))
+    return Promise.reject(new Error("Unknown accountId: " + accountId));
   }
 
   let formattedMessage: MessageData | null;
