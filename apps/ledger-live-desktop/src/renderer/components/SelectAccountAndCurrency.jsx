@@ -46,7 +46,7 @@ const FormContent: ThemedComponent<{}> = styled.div`
 `;
 
 type Props = {
-  selectAccount: (account: AccountLike, parentAccount: ?Account) => void,
+  selectAccount: (account: ?AccountLike, parentAccount: ?Account) => void,
   allCurrencies: Array<TokenCurrency | CryptoCurrency>,
   defaultCurrencyId?: ?string,
   defaultAccountId?: ?string,

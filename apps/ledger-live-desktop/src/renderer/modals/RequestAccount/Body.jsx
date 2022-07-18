@@ -19,7 +19,7 @@ type OwnProps = {|
   params: {
     currencies?: string[],
     allowAddAccount?: boolean,
-    onResult: (account: AccountLike, parentAccount?: Account | null) => void,
+    onResult: (account?: AccountLike, parentAccount?: Account | null) => void,
     onCancel: (reason: any) => void,
   },
 |};
