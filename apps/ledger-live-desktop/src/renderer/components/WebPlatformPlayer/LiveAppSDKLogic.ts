@@ -1,13 +1,13 @@
 import { Dispatch } from "redux";
 import { TFunction } from "react-i18next";
 
+import { UserRefusedOnDevice } from "@ledgerhq/errors";
 import {
   Account,
   AccountLike,
   CryptoCurrency,
   Operation,
   SignedOperation,
-  Transaction,
 } from "@ledgerhq/live-common/types/index";
 import { addPendingOperation, getMainAccount } from "@ledgerhq/live-common/account/index";
 import { getAccountBridge } from "@ledgerhq/live-common/bridge/index";
@@ -335,7 +335,7 @@ export const signMessageLogic = (
 ) => {
   const account = accounts.find(account => account.id === accountId);
   if (account === undefined) {
-    return Promise.reject(new Error("Unknown accountId: " + accountId));
+    return Promise.reject(new Error("account not found"));
   }
 
   let formattedMessage: MessageData | null;
@@ -357,7 +357,7 @@ export const signMessageLogic = (
           reject(err);
         },
         onClose: () => {
-          reject(new Error("Signature aborted by user"));
+          reject(new UserRefusedOnDevice());
         },
       }),
     );
