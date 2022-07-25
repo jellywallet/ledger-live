@@ -687,6 +687,7 @@ export function testBridge<T extends Transaction>(data: DatasetTest<T>): void {
                     const a = (subAccounts as SubAccount[]).find(
                       (a) => a.id === subAccountId
                     );
+                    console.log(subAccounts);
                     invariant(a, "sub account not found");
                     return a;
                   };

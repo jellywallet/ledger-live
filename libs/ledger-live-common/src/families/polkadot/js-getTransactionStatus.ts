@@ -80,12 +80,6 @@ const getSendTransactionStatus = async (
   const leftover = a.spendableBalance.minus(totalSpent);
 
   if (
-    a.spendableBalance.lte(
-      EXISTENTIAL_DEPOSIT.plus(EXISTENTIAL_DEPOSIT_RECOMMENDED_MARGIN)
-    )
-  ) {
-    errors.amount = new NotEnoughBalance();
-  } else if (
     minimumBalanceExistential.gt(0) &&
     leftover.lt(minimumBalanceExistential) &&
     leftover.gt(0)
@@ -97,6 +91,14 @@ const getSendTransactionStatus = async (
         { showCode: true }
       ),
     });
+  } else if (
+    !errors.amount &&
+    !t.useAllAmount &&
+    a.spendableBalance.lte(
+      EXISTENTIAL_DEPOSIT.plus(EXISTENTIAL_DEPOSIT_RECOMMENDED_MARGIN)
+    )
+  ) {
+    errors.amount = new NotEnoughBalance();
   } else if (totalSpent.gt(a.spendableBalance)) {
     errors.amount = new NotEnoughBalance();
   }
