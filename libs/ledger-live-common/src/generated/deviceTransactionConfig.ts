@@ -12,6 +12,8 @@ import elrond from "../families/elrond/deviceTransactionConfig";
 
 import ethereum from "../families/ethereum/deviceTransactionConfig";
 
+import evm from "../families/evm/deviceTransactionConfig";
+
 import filecoin from "../families/filecoin/deviceTransactionConfig";
 
 import hedera from "../families/hedera/deviceTransactionConfig";
@@ -37,6 +39,7 @@ export default {
   crypto_org,
   elrond,
   ethereum,
+  evm,
   filecoin,
   hedera,
   polkadot,
