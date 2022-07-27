@@ -65,7 +65,11 @@ export async function signP2SHTransaction(
 
   for (const input of inputs) {
     if (!resuming) {
-      const trustedInput = input[0].txId;
+      const trustedInput = await getTrustedInputCall(
+        transport,
+        input[1],
+        input[0]
+      );
       const sequence = Buffer.alloc(4);
       sequence.writeUInt32LE(
         input.length >= 4 && typeof input[3] === "number"
@@ -76,8 +80,8 @@ export async function signP2SHTransaction(
       trustedInputs.push({
         trustedInput: false,
         value: segwit
-          ? Buffer.from(trustedInput!, "hex")
-          : Buffer.from(trustedInput!, "hex").slice(4, 4 + 0x24),
+          ? Buffer.from(trustedInput, "hex")
+          : Buffer.from(trustedInput, "hex").slice(4, 4 + 0x24),
         sequence,
       });
     }

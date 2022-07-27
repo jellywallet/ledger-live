@@ -1,11 +1,9 @@
-<img src="https://user-images.githubusercontent.com/211411/34776833-6f1ef4da-f618-11e7-8b13-f0697901d6a8.png" height="100" />
-
 [Github](https://github.com/LedgerHQ/ledgerjs/),
 [Ledger Devs Slack](https://ledger-dev.slack.com/)
 
-## @ledgerhq/hw-app-btc
+## hw-app-dfi
 
-Ledger Hardware Wallet BTC JavaScript bindings. Also supports many altcoins.
+Ledger Hardware Wallet DFI JavaScript bindings. Also supports many altcoins.
 
 ## API
 
@@ -13,7 +11,7 @@ Ledger Hardware Wallet BTC JavaScript bindings. Also supports many altcoins.
 
 #### Table of Contents
 
-*   [Btc](#btc)
+*   [Dfi](#dfi)
     *   [Parameters](#parameters)
     *   [Examples](#examples)
     *   [getWalletXpub](#getwalletxpub)
@@ -37,7 +35,7 @@ Ledger Hardware Wallet BTC JavaScript bindings. Also supports many altcoins.
         *   [Parameters](#parameters-7)
         *   [Examples](#examples-6)
 *   [impl](#impl)
-*   [BtcNew](#btcnew)
+*   [DfiNew](#btcnew)
     *   [Parameters](#parameters-8)
     *   [getWalletXpub](#getwalletxpub-1)
         *   [Parameters](#parameters-9)
@@ -45,7 +43,7 @@ Ledger Hardware Wallet BTC JavaScript bindings. Also supports many altcoins.
         *   [Parameters](#parameters-10)
     *   [createPaymentTransactionNew](#createpaymenttransactionnew-1)
         *   [Parameters](#parameters-11)
-*   [BtcOld](#btcold)
+*   [DfiOld](#btcold)
     *   [Parameters](#parameters-12)
     *   [Examples](#examples-7)
     *   [getWalletPublicKey](#getwalletpublickey-2)
@@ -104,9 +102,9 @@ Ledger Hardware Wallet BTC JavaScript bindings. Also supports many altcoins.
 *   [TransactionOutput](#transactionoutput)
 *   [Transaction](#transaction)
 
-### Btc
+### Dfi
 
-Bitcoin API.
+DeFiChain API.
 
 #### Parameters
 
@@ -116,8 +114,8 @@ Bitcoin API.
 #### Examples
 
 ```javascript
-import Btc from "@ledgerhq/hw-app-btc";
-const btc = new Btc(transport)
+import Dfi from "@ledgerhq/hw-app-dfi";
+const dfi = new Dfi(transport)
 ```
 
 #### getWalletXpub

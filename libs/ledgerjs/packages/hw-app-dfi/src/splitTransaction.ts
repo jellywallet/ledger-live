@@ -2,6 +2,9 @@ import { log } from "@ledgerhq/logs";
 import type { Transaction, TransactionInput, TransactionOutput } from "./types";
 import { getVarint } from "./varint";
 import { formatTransactionDebug } from "./debug";
+import * as varuint from 'varuint-bitcoin';
+
+import { BufferReader } from "./buffertools";
 export function splitTransaction(
   transactionHex: string,
   isSegwitSupported: boolean | null | undefined = false,
@@ -21,6 +24,10 @@ export function splitTransaction(
   const isZencash = additionals.includes("zencash");
   const transaction = Buffer.from(transactionHex, "hex");
   const version = transaction.slice(offset, offset + 4);
+  const versionInt = version.readInt32LE(0);
+
+  const MIN_VERSION_NO_TOKENS = 3;
+
   const overwinter =
     version.equals(Buffer.from([0x03, 0x00, 0x00, 0x80])) ||
     version.equals(Buffer.from([0x04, 0x00, 0x00, 0x80]));
@@ -95,10 +102,17 @@ export function splitTransaction(
     offset += varint[1];
     const script = transaction.slice(offset, offset + varint[0]);
     offset += varint[0];
-    outputs.push({
+    const output:TransactionOutput = {
       amount,
       script,
-    });
+    };
+    outputs.push(output);
+
+    if (versionInt > MIN_VERSION_NO_TOKENS) {
+      const vi = varuint.decode(transaction, offset);
+      offset += varuint.decode.bytes;
+      output.tokenId = vi;
+    }
   }
 
   let witnessScript, locktime;

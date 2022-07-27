@@ -3,7 +3,7 @@ import { openTransportReplayer, RecordStore } from "@ledgerhq/hw-transport-mocke
 import { TransportReplayer } from "@ledgerhq/hw-transport-mocker/lib/openTransportReplayer";
 import ecc from "tiny-secp256k1";
 import { getXpubComponents, pathArrayToString } from "../../src/bip32";
-import BtcNew from "../../src/BtcNew";
+import DfiNew from "../../src/DfiNew";
 import {
   DefaultDescriptorTemplate,
   WalletPolicy
@@ -119,8 +119,8 @@ async function testGetWalletXpub(path: string, version = 0x043587cf) {
   const [client] = await createClient();
   const expectedXpub = "tpubDCwYjpDhUdPGP5rS3wgNg13mTrrjBuG8V9VpWbyptX6TRPbNoZVXsoVUSkCjmQ8jJycjuDKBb9eataSymXakTTaGifxR6kmVsfFehH1ZgJT";
   client.mockGetPubkeyResponse(path, expectedXpub);
-  const btc = new BtcNew(client);
-  const result = await btc.getWalletXpub({ path: path, xpubVersion: version });
+  const dfi = new DfiNew(client);
+  const result = await dfi.getWalletXpub({ path: path, xpubVersion: version });
   expect(result).toEqual(expectedXpub);
 }
 async function testGetWalletPublicKey(
@@ -145,7 +145,7 @@ async function testGetWalletPublicKey(
     "testaddress"
   );
 
-  const btcNew = new BtcNew(client);
+  const btcNew = new DfiNew(client);
   const addressFormat = addressFormatFromDescriptorTemplate(expectedDescriptorTemplate);
   const result = await btcNew.getWalletPublicKey(path, { format: addressFormat });
   verifyGetWalletPublicKeyResult(result, keyXpub, "testaddress");

@@ -12,6 +12,7 @@ export interface TransactionInput {
 export interface TransactionOutput {
   amount: Buffer;
   script: Buffer;
+  tokenId?: number;
 }
 
 /**

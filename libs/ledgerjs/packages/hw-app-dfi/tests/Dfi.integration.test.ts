@@ -2,8 +2,8 @@
 import Transport from "@ledgerhq/hw-transport";
 import SpeculosTransport from "@ledgerhq/hw-transport-node-speculos";
 import { getXpubComponents } from "../src/bip32";
-import Btc from "../src/Btc";
-import BtcNew from "../src/BtcNew";
+import Dfi from "../src/Dfi";
+import DfiNew from "../src/DfiNew";
 import { compressPublicKey } from "../src/compressPublicKey";
 import { AppClient } from "../src/newops/appClient";
 import { runSignTransaction, TestingClient } from "./newops/integrationtools";
@@ -155,13 +155,13 @@ async function transport(): Promise<SpeculosTransport> {
 async function impl(
   variant: "old" | "new",
   transport: Transport
-): Promise<Btc | BtcNew> {
+): Promise<Dfi | DfiNew> {
   if (variant === "old") {
-    return new Btc(transport);
+    return new Dfi(transport);
   }
   const client = new AppClient(transport);
-  const btc = new BtcNew(client);
-  return btc;
+  const dfi = new DfiNew(client);
+  return dfi;
 }
 
 async function runGetWalletPublicKey(variant: "old" | "new") {
@@ -173,9 +173,9 @@ async function runGetWalletPublicKey(variant: "old" | "new") {
     return;
   }
   try {
-    const btc = await impl(variant, tr);
+    const dfi = await impl(variant, tr);
 
-    const account = await btc.getWalletPublicKey("m/44'/1'/0'");
+    const account = await dfi.getWalletPublicKey("m/44'/1'/0'");
     const expectedAccount = getXpubComponents(xpubs["m/44'/1'/0'"]);
 
     const uncompressesPubkey =
@@ -189,7 +189,7 @@ async function runGetWalletPublicKey(variant: "old" | "new") {
     );
     expect(account.publicKey).toEqual(uncompressesPubkey);
 
-    const keydata = await btc.getWalletPublicKey("m/44'/1'/0'/0/0");
+    const keydata = await dfi.getWalletPublicKey("m/44'/1'/0'/0/0");
     expect(keydata.bitcoinAddress).toEqual(
       "mz5vLWdM1wHVGSmXUkhKVvZbJ2g4epMXSm"
     );
