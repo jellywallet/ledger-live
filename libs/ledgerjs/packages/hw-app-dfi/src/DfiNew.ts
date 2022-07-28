@@ -32,7 +32,7 @@ import { psbtIn, PsbtV2 } from "./newops/psbtv2";
 import { serializeTransaction } from "./serializeTransaction";
 import type { Transaction } from "./types";
 
-const newSupportedApps = ["Bitcoin", "Bitcoin Test"];
+const newSupportedApps = ["Bitcoin", "Bitcoin Test", "DeFiChain", "DeFiChain Test"];
 
 export function canSupportApp(appAndVersion: AppAndVersion): boolean {
   return (

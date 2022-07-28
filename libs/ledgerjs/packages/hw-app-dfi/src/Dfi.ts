@@ -128,36 +128,36 @@ export default class Dfi {
         (!options.verify || options.verify == false) &&
         !isPathNormal(path)
       ) {
-        console.warn(`WARNING: Using deprecated device protocol to get the public key because
+        // console.warn(`WARNING: Using deprecated device protocol to get the public key because
         
-        * a non-standard path is requested, and
-        * verify flag is false
+        // * a non-standard path is requested, and
+        // * verify flag is false
         
-        The new protocol only allows export of non-standard paths if the 
-        verify flag is true. Standard paths are (currently):
+        // The new protocol only allows export of non-standard paths if the 
+        // verify flag is true. Standard paths are (currently):
 
-        M/44'/(1|0)'/X'
-        M/49'/(1|0)'/X'
-        M/84'/(1|0)'/X'
-        M/86'/(1|0)'/X'
-        M/48'/(1|0)'/X'/Y'
+        // M/44'/(1|0)'/X'
+        // M/49'/(1|0)'/X'
+        // M/84'/(1|0)'/X'
+        // M/86'/(1|0)'/X'
+        // M/48'/(1|0)'/X'/Y'
 
-        followed by "", "(0|1)", or "(0|1)/b", where a and b are 
-        non-hardened. For example, the following paths are standard
+        // followed by "", "(0|1)", or "(0|1)/b", where a and b are 
+        // non-hardened. For example, the following paths are standard
         
-        M/48'/1'/99'/7'
-        M/86'/1'/99'/0
-        M/48'/0'/99'/7'/1/17
+        // M/48'/1'/99'/7'
+        // M/86'/1'/99'/0
+        // M/48'/0'/99'/7'/1/17
 
-        The following paths are non-standard
+        // The following paths are non-standard
 
-        M/48'/0'/99'           // Not deepest hardened path
-        M/48'/0'/99'/7'/1/17/2 // Too many non-hardened derivation steps
-        M/199'/0'/1'/0/88      // Not a known purpose 199
-        M/86'/1'/99'/2         // Change path item must be 0 or 1
+        // M/48'/0'/99'           // Not deepest hardened path
+        // M/48'/0'/99'/7'/1/17/2 // Too many non-hardened derivation steps
+        // M/199'/0'/1'/0/88      // Not a known purpose 199
+        // M/86'/1'/99'/2         // Change path item must be 0 or 1
 
-        This compatibility safeguard will be removed in the future.
-        Please consider calling Btc.getWalletXpub() instead.`);
+        // This compatibility safeguard will be removed in the future.
+        // Please consider calling Btc.getWalletXpub() instead.`);
         return this.old().getWalletPublicKey(path, options);
       } else {
         return impl.getWalletPublicKey(path, options);
