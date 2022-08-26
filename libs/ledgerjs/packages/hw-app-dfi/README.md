@@ -401,7 +401,7 @@ Bitcoin API.
 #### Examples
 
 ```javascript
-import Btc from "@ledgerhq/hw-app-btc";
+import Btc from "@ledgerhq/hw-app-dfi";
 const btc = new Btc(transport)
 ```
 

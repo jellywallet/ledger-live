@@ -157,7 +157,7 @@ export default class DfiOld {
   createPaymentTransactionNew(arg: CreateTransactionArg): Promise<string> {
     if (arguments.length > 1) {
       console.warn(
-        "@ledgerhq/hw-app-btc: createPaymentTransactionNew multi argument signature is deprecated. please switch to named parameters."
+        "@ledgerhq/hw-app-dfi: createPaymentTransactionNew multi argument signature is deprecated. please switch to named parameters."
       );
     }
     return createTransaction(this.transport, arg);
@@ -185,7 +185,7 @@ export default class DfiOld {
   signP2SHTransaction(arg: SignP2SHTransactionArg): Promise<string[]> {
     if (arguments.length > 1) {
       console.warn(
-        "@ledgerhq/hw-app-btc: signP2SHTransaction multi argument signature is deprecated. please switch to named parameters."
+        "@ledgerhq/hw-app-dfi: signP2SHTransaction multi argument signature is deprecated. please switch to named parameters."
       );
     }
 

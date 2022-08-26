@@ -1,4 +1,4 @@
-# @ledgerhq/hw-app-btc
+# @ledgerhq/hw-app-dfi
 
 ## 7.0.0
 

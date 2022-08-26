@@ -17,7 +17,7 @@ export type { AddressFormat };
  * Bitcoin API.
  *
  * @example
- * import Btc from "@ledgerhq/hw-app-btc";
+ * import Btc from "@ledgerhq/hw-app-dfi";
  * const btc = new Btc(transport)
  */
 
@@ -221,7 +221,7 @@ export default class Dfi {
   createPaymentTransactionNew(arg: CreateTransactionArg): Promise<string> {
     if (arguments.length > 1) {
       console.warn(
-        "@ledgerhq/hw-app-btc: createPaymentTransactionNew multi argument signature is deprecated. please switch to named parameters."
+        "@ledgerhq/hw-app-dfi: createPaymentTransactionNew multi argument signature is deprecated. please switch to named parameters."
       );
     }
     return this.getCorrectImpl().then((impl) => {
