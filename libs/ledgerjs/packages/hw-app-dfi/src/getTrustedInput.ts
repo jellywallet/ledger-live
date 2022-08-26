@@ -3,6 +3,7 @@ import type Transport from "@ledgerhq/hw-transport";
 import type { Transaction } from "./types";
 import { MAX_SCRIPT_BLOCK } from "./constants";
 import { createVarint } from "./varint";
+import { MIN_VERSION_NO_TOKENS } from "./splitTransaction";
 export async function getTrustedInputRaw(
   transport: Transport,
   transactionData: Buffer,
@@ -42,7 +43,7 @@ export async function getTrustedInput(
   if (!outputs || !locktime) {
     throw new Error("getTrustedInput: locktime & outputs is expected");
   }
-
+  const versionInt = transaction.version.readInt32LE(0);
   const isDecred = additionals.includes("decred");
   const isXST = additionals.includes("stealthcoin");
 
@@ -117,19 +118,21 @@ export async function getTrustedInput(
     await (isDecred
       ? processWholeScriptBlock(Buffer.concat([input.script, input.sequence]))
       : isXSTV2
-      ? processWholeScriptBlock(input.sequence)
-      : processScriptBlocks(input.script, input.sequence));
+        ? processWholeScriptBlock(input.sequence)
+        : processScriptBlocks(input.script, input.sequence));
   }
 
   await getTrustedInputRaw(transport, createVarint(outputs.length));
 
   for (const output of outputs) {
     const data = Buffer.concat([
-      output.amount,
-      isDecred ? Buffer.from([0x00, 0x00]) : Buffer.alloc(0), //Version script
-      createVarint(output.script.length),
-      output.script,
-    ]);
+        output.amount,
+        isDecred ? Buffer.from([0x00, 0x00]) : Buffer.alloc(0), //Version script
+        createVarint(output.script.length),
+        output.script,
+        versionInt > MIN_VERSION_NO_TOKENS ? (output.tokenId ? createVarint(output.tokenId) : createVarint(0)) : Buffer.alloc(0)
+      ]);
+
     await getTrustedInputRaw(transport, data);
   }
 

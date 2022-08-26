@@ -1,4 +1,5 @@
 import { BufferReader, BufferWriter } from "../src/buffertools"
+import { expect, test } from '@jest/globals';
 
 function run(n: number, expectedHex: string) {
   const w = new BufferWriter();

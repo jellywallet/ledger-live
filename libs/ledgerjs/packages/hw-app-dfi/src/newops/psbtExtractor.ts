@@ -32,6 +32,10 @@ export function extract(psbt: PsbtV2): Buffer {
   for (let i = 0; i < outputCount; i++) {
     tx.writeUInt64(psbt.getOutputAmount(i));
     tx.writeVarSlice(psbt.getOutputScript(i));
+
+    if(psbt.getGlobalTxVersion() >= 3) {
+      tx.writeVarInt(0);
+    }
   }
   tx.writeSlice(witnessWriter.buffer());
   tx.writeUInt32(psbt.getGlobalFallbackLocktime() ?? 0);

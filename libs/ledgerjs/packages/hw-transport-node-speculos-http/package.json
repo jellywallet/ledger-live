@@ -1,6 +1,6 @@
 {
-  "name": "@ledgerhq/hw-transport-node-speculos-http",
-  "version": "6.27.1",
+  "name": "hw-transport-node-speculos-http",
+  "version": "6.27.4",
   "description": "Ledger Hardware Wallet communication layer with speculos Nano simulator using the http api",
   "keywords": [
     "Ledger",
@@ -14,12 +14,12 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/LedgerHQ/ledger-live.git"
+    "url": "https://github.com/p3root/ledger-live.git"
   },
   "bugs": {
-    "url": "https://github.com/LedgerHQ/ledger-live/issues"
+    "url": "https://github.com/p3root/ledger-live/issues"
   },
-  "homepage": "https://github.com/LedgerHQ/ledger-live/tree/develop/libs/ledgerjs/packages/hw-transport-node-speculos-http",
+  "homepage": "https://github.com/p3root/ledger-live/tree/develop/libs/ledgerjs/packages/hw-transport-node-speculos-http",
   "publishConfig": {
     "access": "public"
   },
@@ -28,10 +28,16 @@
   "types": "lib/SpeculosHttpTransport.d.ts",
   "license": "Apache-2.0",
   "dependencies": {
-    "@ledgerhq/errors": "workspace:^",
-    "@ledgerhq/hw-transport": "workspace:^",
-    "@ledgerhq/logs": "workspace:^",
+    "@ledgerhq/errors": "latest",
+    "@ledgerhq/hw-transport": "latest",
+    "@ledgerhq/logs": "latest",
     "axios": "^0.26.1"
+  },
+  "devDependencies": {
+    "@types/node": "^18.6.2",
+    "ts-node": "^8.3.0",
+    "tslint": "^6.1.3",
+    "typescript": "^4.4.4"
   },
   "scripts": {
     "clean": "rimraf lib lib-es",

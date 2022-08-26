@@ -1,4 +1,7 @@
 import { Merkle } from "../../src/newops/merkle";
+
+import { expect, test, jest } from '@jest/globals';
+
 function testHasher(buf: Buffer): Buffer {
   return Buffer.from(buf);
 }

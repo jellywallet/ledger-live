@@ -1,4 +1,5 @@
 // import Transport from "@ledgerhq/hw-transport-node-hid";
+import { expect, test, jest } from '@jest/globals';
 import Transport from "@ledgerhq/hw-transport";
 import SpeculosTransport from "@ledgerhq/hw-transport-node-speculos";
 import { getXpubComponents } from "../src/bip32";

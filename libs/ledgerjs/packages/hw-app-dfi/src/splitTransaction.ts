@@ -5,6 +5,9 @@ import { formatTransactionDebug } from "./debug";
 import * as varuint from 'varuint-bitcoin';
 
 import { BufferReader } from "./buffertools";
+
+export const MIN_VERSION_NO_TOKENS = 3;
+
 export function splitTransaction(
   transactionHex: string,
   isSegwitSupported: boolean | null | undefined = false,
@@ -25,8 +28,6 @@ export function splitTransaction(
   const transaction = Buffer.from(transactionHex, "hex");
   const version = transaction.slice(offset, offset + 4);
   const versionInt = version.readInt32LE(0);
-
-  const MIN_VERSION_NO_TOKENS = 3;
 
   const overwinter =
     version.equals(Buffer.from([0x03, 0x00, 0x00, 0x80])) ||
@@ -172,7 +173,7 @@ export function splitTransaction(
     extraData,
   };
   log(
-    "btc",
+    "dfi",
     `splitTransaction ${transactionHex}:\n${formatTransactionDebug(t)}`
   );
   return t;

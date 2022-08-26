@@ -78,7 +78,7 @@ export async function signP2SHTransaction(
         0
       );
       trustedInputs.push({
-        trustedInput: false,
+        trustedInput: true,
         value: segwit
           ? Buffer.from(trustedInput, "hex")
           : Buffer.from(trustedInput, "hex").slice(4, 4 + 0x24),

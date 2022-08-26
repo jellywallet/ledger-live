@@ -1,5 +1,8 @@
+import { MIN_VERSION_NO_TOKENS } from "./splitTransaction";
 import type { Transaction } from "./types";
 export function formatTransactionDebug(transaction: Transaction): string {
+
+  const versionInt = transaction.version.readInt32LE(0);
   let str = "TX";
   str += " version " + transaction.version.toString("hex");
 
@@ -33,10 +36,12 @@ export function formatTransactionDebug(transaction: Transaction): string {
     str += ` script ${script.toString("hex")}`;
     str += ` sequence ${sequence.toString("hex")}`;
   });
-  (transaction.outputs || []).forEach(({ amount, script }, i) => {
+  (transaction.outputs || []).forEach(({ amount, script, tokenId }, i) => {
     str += `\noutput ${i}:`;
     str += ` amount ${amount.toString("hex")}`;
     str += ` script ${script.toString("hex")}`;
+
+    str += versionInt > MIN_VERSION_NO_TOKENS ? ` tokenId ${tokenId}` : "";
   });
   return str;
 }

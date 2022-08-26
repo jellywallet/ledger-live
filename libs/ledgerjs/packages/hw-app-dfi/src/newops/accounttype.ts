@@ -346,6 +346,7 @@ export class p2wpkh extends SingleKeyAccount {
     pubkey: Buffer,
     path: number[]
   ) {
+    
     if (!inputTx) {
       throw new Error("Full input base transaction required");
     }

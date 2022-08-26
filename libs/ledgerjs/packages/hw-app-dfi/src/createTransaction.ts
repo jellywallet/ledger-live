@@ -51,6 +51,7 @@ export type CreateTransactionArg = {
   additionals: Array<string>;
   expiryHeight?: Buffer;
   useTrustedInputForSegwit?: boolean;
+  transactionVersion?: number,
   onDeviceStreaming?: (arg0: {
     progress: number;
     total: number;

@@ -18,11 +18,15 @@ export function getTrustedInputBIP143(
     throw new Error("Decred does not implement BIP143");
   }
 
+  const serializedTx = serializeTransaction(transaction, true);
+  const serializedTxHex = serializedTx.toString('hex');
+  
   let hash = shajs("sha256")
     .update(
-      shajs("sha256").update(serializeTransaction(transaction, true)).digest()
+      shajs("sha256").update(serializedTx).digest()
     )
     .digest();
+
   const data = Buffer.alloc(4);
   data.writeUInt32LE(indexLookup, 0);
   const { outputs, locktime } = transaction;

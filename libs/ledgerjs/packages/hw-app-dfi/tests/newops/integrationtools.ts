@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import Transport from "@ledgerhq/hw-transport";
 import bs58check from "bs58check";
-import Btc from "../../src/Btc";
-import BtcNew from "../../src/BtcNew";
+import Dfi from "../../src/Dfi";
+import DfiNew from "../../src/DfiNew";
 import { BufferWriter } from "../../src/buffertools";
 import { CreateTransactionArg } from "../../src/createTransaction";
 import { AddressFormat } from "../../src/getWalletPublicKey";
@@ -20,9 +20,9 @@ export async function runSignTransaction(
   client: TestingClient,
   transport: Transport
 ): Promise<string> {
-  const btcNew = new BtcNew(client);
+  const btcNew = new DfiNew(client);
   // btc is needed to perform some functions like splitTransaction.
-  const btc = new Btc(transport);
+  const btc = new Dfi(transport);
   const accountType = getAccountType(testTx.vin[0], btc);
   const additionals: string[] = [];
   if (accountType == StandardPurpose.p2wpkh) {
@@ -149,7 +149,7 @@ function getSignature(
   throw new Error();
 }
 
-function getAccountType(coreInput: CoreInput, btc: Btc): StandardPurpose {
+function getAccountType(coreInput: CoreInput, btc: Dfi): StandardPurpose {
   const spentTx = spentTxs[coreInput.txid];
   if (!spentTx) {
     throw new Error("Spent tx " + coreInput.txid + " unavailable.");
@@ -181,7 +181,7 @@ export function creatDummyXpub(pubkey: Buffer): string {
 
 function createInput(
   coreInput: CoreInput,
-  btc: Btc
+  btc: Dfi
 ): [Transaction, number, string | null, number] {
   const spentTx = spentTxs[coreInput.txid];
   if (!spentTx) {

@@ -8,7 +8,7 @@ import { getTrustedInput } from "./getTrustedInput";
 import { getTrustedInputBIP143 } from "./getTrustedInputBIP143";
 import type { AddressFormat } from "./getWalletPublicKey";
 import { AppClient } from "./newops/appClient";
-import { serializeTransactionOutputs } from "./serializeTransaction";
+import { serializeTransaction, serializeTransactionOutputs } from "./serializeTransaction";
 import type { SignP2SHTransactionArg } from "./signP2SHTransaction";
 import { splitTransaction } from "./splitTransaction";
 import type { Transaction } from "./types";
@@ -280,6 +280,10 @@ export default class Dfi {
   */
   serializeTransactionOutputs(t: Transaction): Buffer {
     return serializeTransactionOutputs(t);
+  }  
+  
+  serializeTransaction(t: Transaction, skipWitness: boolean): Buffer {
+    return serializeTransaction(t, skipWitness);
   }
 
   getTrustedInput(

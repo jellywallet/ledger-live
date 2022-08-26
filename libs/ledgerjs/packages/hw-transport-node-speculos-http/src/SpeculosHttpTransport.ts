@@ -20,7 +20,6 @@ export type SpeculosHttpTransportOpts = {
 export default class SpeculosHttpTransport extends Transport {
   instance: AxiosInstance;
   opts: SpeculosHttpTransportOpts;
-  eventStream: any; // ReadStream?
 
   constructor(instance: AxiosInstance, opts: SpeculosHttpTransportOpts) {
     super();
@@ -32,7 +31,7 @@ export default class SpeculosHttpTransport extends Transport {
   // this transport is not discoverable
   static list = (): any => Promise.resolve([]);
   static listen = (_observer: any) => ({
-    unsubscribe: () => {},
+    unsubscribe: () => { },
   });
 
   static open = (
@@ -40,34 +39,18 @@ export default class SpeculosHttpTransport extends Transport {
   ): Promise<SpeculosHttpTransport> =>
     new Promise((resolve, reject) => {
       const instance = axios.create(opts);
-      instance.defaults.baseURL = "http://localhost:5000";
+      instance.defaults.baseURL = "http://" + opts.baseURL;
 
       const transport = new SpeculosHttpTransport(instance, opts);
 
-      instance({
-        url: "/events?stream=true",
-        responseType: "stream",
+      instance.get("/events").then((response) => {
+        resolve(transport);
       })
-        .then((response) => {
-          response.data.on("data", (chunk) => {
-            log("speculos-event", chunk.toString());
-            // XXX: we could process display events here
-            // client side automation or UI tests/checks
-          });
-          response.data.on("close", () => {
-            log("speculos-event", "close");
-            transport.emit(
-              "disconnect",
-              new DisconnectedDevice("Speculos exited!")
-            );
-          });
-          transport.eventStream = response.data;
-          // we are connected to speculos
-          resolve(transport);
-        })
         .catch((error) => {
           reject(error);
-        });
+        });;
+
+
     });
 
   /**
@@ -101,8 +84,6 @@ export default class SpeculosHttpTransport extends Transport {
   }
 
   async close() {
-    // close event stream
-    this.eventStream.destroy();
     return Promise.resolve();
   }
 }

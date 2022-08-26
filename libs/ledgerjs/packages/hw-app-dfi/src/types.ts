@@ -20,7 +20,6 @@ export interface TransactionOutput {
 export interface Transaction {
   version: Buffer;
   inputs: TransactionInput[];
-  txId?: string;
   outputs?: TransactionOutput[];
   locktime?: Buffer;
   witness?: Buffer;

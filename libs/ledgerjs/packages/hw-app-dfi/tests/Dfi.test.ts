@@ -8,6 +8,7 @@ import DfiNew from "../src/DfiNew";
 import DfiOld, { AddressFormat } from "../src/DfiOld";
 import { AppAndVersion, getAppAndVersion } from "../src/getAppAndVersion";
 import { TestingClient } from "./newops/integrationtools";
+import { expect, test } from '@jest/globals';
 
 test("dfi.getWalletXpub", async () => {
   /*
@@ -443,9 +444,9 @@ function testBackend(s: string): any {
   };
 }
 
-class TestBtc extends Btc {
-  n: BtcNew;
-  o: BtcOld;
+class TestDfi extends Dfi {
+  n: DfiNew;
+  o: DfiOld;
   constructor(public tr: Transport) {
     super(tr);
     this.n = new DfiNew(new TestingClient(tr));
@@ -453,10 +454,10 @@ class TestBtc extends Btc {
     this.o = new DfiOld(tr);
     this.o.getWalletPublicKey = testBackend("old");
   }
-  protected new(): BtcNew {
+  protected new(): DfiNew {
     return this.n;
   }
-  protected old(): BtcOld {
+  protected old(): DfiOld {
     return this.o;
   }
 }
@@ -470,52 +471,52 @@ class TestBtc extends Btc {
 //   expect(a + c).toBe(expected);
 // });
 
-test.each`
-  app          | ver               | path                 | format       | display      | exp
-  ${"Bitcoin"} | ${"1.99.99"}      | ${"m/44'/0'/1'"}     | ${"bech32m"} | ${false}     | ${""}
-  ${"Bitcoin"} | ${"1.99.99"}      | ${"m/44'/0'"}        | ${"bech32m"} | ${false}     | ${""}
-  ${"Bitcoin"} | ${"2.0.0-alpha1"} | ${"m/44'/0'/1'"}     | ${"bech32m"} | ${false}     | ${"new"}
-  ${"Bitcoin"} | ${"2.0.0-alpha1"} | ${"m/44'/0'"}        | ${"bech32m"} | ${false}     | ${"new"}
-  ${"Bitcoin"} | ${"2.0.0-beta"}   | ${"m/84'/1'/0'"}     | ${"bech32"}  | ${false}     | ${"new"}
-  ${"Bitcoin"} | ${"2.0.0-alpha1"} | ${"m/44'/0'/1'"}     | ${"bech32"}  | ${false}     | ${"new"}
-  ${"Bitcoin"} | ${"2.0.0-alpha1"} | ${"m/44'/0'"}        | ${"bech32"}  | ${undefined} | ${"old"}
-  ${"Bitcoin"} | ${"2.0.0-alpha1"} | ${"m/44'/0'"}        | ${"bech32"}  | ${true}      | ${"new"}
-  ${"Bitcoin"} | ${"2.0.0-alpha1"} | ${"m/44'/0'/1'/0/0"} | ${"bech32"}  | ${false}     | ${"new"}
-  ${"Bitcoin"} | ${"2.0.0-alpha1"} | ${"m/44'/0'/1'/1/0"} | ${"bech32"}  | ${false}     | ${"new"}
-  ${"Bitcoin"} | ${"2.0.0-alpha1"} | ${"m/44'/0'/1'/1/0"} | ${"legacy"}  | ${false}     | ${"new"}
-  ${"Bitcoin"} | ${"2.0.0-alpha1"} | ${"m/44'/0'/1'/1/0"} | ${"p2sh"}    | ${false}     | ${"new"}
-  ${"Bitcoin"} | ${"2.0.0-alpha1"} | ${"m/44'/0'/1'/2/0"} | ${"bech32"}  | ${false}     | ${"old"}
-`(
-  "dispatch $app $ver $path $format $display to $exp",
-  async ({ app, ver, path, format, display, exp }) => {
-    const appName = Buffer.from([app.length])
-      .toString("hex")
-      .concat(Buffer.from(app, "ascii").toString("hex"));
-    const appVersion = Buffer.from([ver.length])
-      .toString("hex")
-      .concat(Buffer.from(ver, "ascii").toString("hex"));
-    const resp = `01${appName}${appVersion}01029000`;
-    const tr = await openTransportReplayer(
-      RecordStore.fromString(`=> b001000000\n <= ${resp}`)
-    );
-    const dfi = new TestBtc(tr);
-    try {
-      const key = await dfi.getWalletPublicKey(path, {
-        format: format,
-        verify: display,
-      });
-      if (exp === "") {
-        expect(1).toEqual(0); // Allways fail. Don't know how to do that properly
-      }
-      expect(key.publicKey).toEqual(exp);
-    } catch (e: any) {
-      if (exp != "") {
-        throw e;
-      }
-      expect(exp).toEqual("");
-    }
-  }
-);
+// test.each`
+//   app          | ver               | path                 | format       | display      | exp
+//   ${"Bitcoin"} | ${"1.99.99"}      | ${"m/44'/0'/1'"}     | ${"bech32m"} | ${false}     | ${""}
+//   ${"Bitcoin"} | ${"1.99.99"}      | ${"m/44'/0'"}        | ${"bech32m"} | ${false}     | ${""}
+//   ${"Bitcoin"} | ${"2.0.0-alpha1"} | ${"m/44'/0'/1'"}     | ${"bech32m"} | ${false}     | ${"new"}
+//   ${"Bitcoin"} | ${"2.0.0-alpha1"} | ${"m/44'/0'"}        | ${"bech32m"} | ${false}     | ${"new"}
+//   ${"Bitcoin"} | ${"2.0.0-beta"}   | ${"m/84'/1'/0'"}     | ${"bech32"}  | ${false}     | ${"new"}
+//   ${"Bitcoin"} | ${"2.0.0-alpha1"} | ${"m/44'/0'/1'"}     | ${"bech32"}  | ${false}     | ${"new"}
+//   ${"Bitcoin"} | ${"2.0.0-alpha1"} | ${"m/44'/0'"}        | ${"bech32"}  | ${undefined} | ${"old"}
+//   ${"Bitcoin"} | ${"2.0.0-alpha1"} | ${"m/44'/0'"}        | ${"bech32"}  | ${true}      | ${"new"}
+//   ${"Bitcoin"} | ${"2.0.0-alpha1"} | ${"m/44'/0'/1'/0/0"} | ${"bech32"}  | ${false}     | ${"new"}
+//   ${"Bitcoin"} | ${"2.0.0-alpha1"} | ${"m/44'/0'/1'/1/0"} | ${"bech32"}  | ${false}     | ${"new"}
+//   ${"Bitcoin"} | ${"2.0.0-alpha1"} | ${"m/44'/0'/1'/1/0"} | ${"legacy"}  | ${false}     | ${"new"}
+//   ${"Bitcoin"} | ${"2.0.0-alpha1"} | ${"m/44'/0'/1'/1/0"} | ${"p2sh"}    | ${false}     | ${"new"}
+//   ${"Bitcoin"} | ${"2.0.0-alpha1"} | ${"m/44'/0'/1'/2/0"} | ${"bech32"}  | ${false}     | ${"old"}
+// `(
+//   "dispatch $app $ver $path $format $display to $exp",
+//   async ({ app, ver, path, format, display, exp }) => {
+//     const appName = Buffer.from([app.length])
+//       .toString("hex")
+//       .concat(Buffer.from(app, "ascii").toString("hex"));
+//     const appVersion = Buffer.from([ver.length])
+//       .toString("hex")
+//       .concat(Buffer.from(ver, "ascii").toString("hex"));
+//     const resp = `01${appName}${appVersion}01029000`;
+//     const tr = await openTransportReplayer(
+//       RecordStore.fromString(`=> b001000000\n <= ${resp}`)
+//     );
+//     const dfi = new TestDfi(tr);
+//     try {
+//       const key = await dfi.getWalletPublicKey(path, {
+//         format: format,
+//         verify: display,
+//       });
+//       if (exp === "") {
+//         expect(1).toEqual(0); // Allways fail. Don't know how to do that properly
+//       }
+//       expect(key.publicKey).toEqual(exp);
+//     } catch (e: any) {
+//       if (exp != "") {
+//         throw e;
+//       }
+//       expect(exp).toEqual("");
+//     }
+//   }
+// );
 
 // test("getWalletPublicKey compatibility for internal hardened keys", async () => {
 //   await testDispatch("Bitcoin", "1.99.99", "m/44'/0'/1'", "bech32m", "");

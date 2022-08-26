@@ -55,7 +55,7 @@ export function canSupportApp(appAndVersion: AppAndVersion): boolean {
  * a much cleaner implementation.
  */
 export default class DfiNew {
-  constructor(private client: Client) {}
+  constructor(private client: Client) { }
 
   /**
    * This is a new method that allow users to get an xpub at a standard path.
@@ -212,7 +212,12 @@ export default class DfiNew {
     }
     psbt.setGlobalInputCount(inputCount);
     psbt.setGlobalPsbtVersion(2);
-    psbt.setGlobalTxVersion(2);
+
+    if (arg.transactionVersion) {
+      psbt.setGlobalTxVersion(arg.transactionVersion);
+    } else {
+      psbt.setGlobalTxVersion(2);
+    }
 
     let notifyCount = 0;
     const progress = () => {
@@ -281,7 +286,7 @@ export default class DfiNew {
     if (!changeFound) {
       throw new Error(
         "Change script not found among outputs! " +
-          changeData?.cond.scriptPubKey.toString("hex")
+        changeData?.cond.scriptPubKey.toString("hex")
       );
     }
 
@@ -361,6 +366,7 @@ export default class DfiNew {
     // redeemScript will be null for wrapped p2wpkh, we need to create it
     // ourselves. But if set, it should be used.
     const redeemScript = input[2] ? Buffer.from(input[2], "hex") : undefined;
+    
     const sequence = input[3];
     if (sequence != undefined) {
       psbt.setInputSequence(i, sequence);
@@ -369,10 +375,12 @@ export default class DfiNew {
       psbt.setInputSighashType(i, sigHashType);
     }
     const inputTxBuffer = serializeTransaction(inputTx, true);
+
     const inputTxid = crypto.hash256(inputTxBuffer);
     const xpubBase58 = await this.client.getExtendedPubkey(false, pathElements);
 
     const pubkey = pubkeyFromXpub(xpubBase58);
+    
     if (!inputTx.outputs)
       throw Error("Missing outputs array in transaction to sign");
     const spentTxOutput = inputTx.outputs[spentOutputIndex];
