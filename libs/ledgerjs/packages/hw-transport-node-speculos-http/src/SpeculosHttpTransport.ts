@@ -32,7 +32,7 @@ export default class SpeculosHttpTransport extends Transport {
   // this transport is not discoverable
   static list = (): any => Promise.resolve([]);
   static listen = (_observer: any) => ({
-    unsubscribe: () => {},
+    unsubscribe: () => { },
   });
 
   static open = (
